@@ -1,4 +1,8 @@
 # Data files (local / generated)
-chc_master_sites.xlsx
+CHC_Master_Sites.xlsx
+Silvera_Sites.xlsx
 geocode_cache.json
-silver_sites.xlsx
+DATA/
+
+# Generated output
+OUTPUT/

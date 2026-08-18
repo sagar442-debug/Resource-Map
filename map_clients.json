@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "clients": [
+    {
+      "id": "CHC",
+      "name": "Calgary Housing",
+      "file": "CHC_Master_Sites.xlsx",
+      "sheet": "CHC Master Sites",
+      "enabled": true,
+      "header_mode": "first_row",
+      "marker_type": "code_label",
+      "group_by_family": true,
+      "family_regex": "^[A-Za-z]+",
+      "detail_zoom": 13,
+      "family_click_max_zoom": 15,
+      "css_prefix": "chc",
+      "dedupe_by": "site_code",
+      "cache_key_fields": ["site_code", "address", "postal_code"],
+      "columns": {
+        "site_code": "Property Code",
+        "site_name": "Project Name",
+        "address": "Representative Address",
+        "geocode_address": "Geocode Address",
+        "postal_code": "Postal Code",
+        "area": "District",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "service_types": "Current Grounds/Snow Contract"
+      },
+      "required_columns": [
+        "Property Code",
+        "Project Name",
+        "Representative Address"
+      ],
+      "required_row_fields": ["site_code"],
+      "layer_group_field": "area",
+      "layer_styles": {
+        "East": {
+          "color": "#d73027",
+          "label": "CHC East — Current Grounds/Snow Contract",
+          "show": true
+        },
+        "South": {
+          "color": "#2a81cb",
+          "label": "CHC South — Reference",
+          "show": true
+        },
+        "West": {
+          "color": "#5a9f2b",
+          "label": "CHC West — Reference",
+          "show": true
+        },
+        "Unknown": {
+          "color": "#f59e0b",
+          "label": "CHC District Unknown",
+          "show": true
+        }
+      },
+      "popup_title": "Calgary Housing Property",
+      "popup_extra_fields": [
+        {"label": "Grounds/Snow", "field": "service_types", "highlight_yes": true},
+        {"label": "Legacy Code", "field": "Legacy Code(s)"},
+        {"label": "Ownership", "field": "Ownership"}
+      ]
+    },
+    {
+      "id": "SILVERA",
+      "name": "Silvera Communities",
+      "file": "Silvera_Sites.xlsx",
+      "sheet": "Silvera Sites",
+      "enabled": true,
+      "header_mode": "search",
+      "header_search_columns": [
+        "Display Name",
+        "Source Address"
+      ],
+      "marker_type": "star",
+      "marker_color": "#7e22ce",
+      "group_by_family": false,
+      "z_index_offset": 10000,
+      "css_prefix": "silvera",
+      "dedupe_by": "address",
+      "cache_key_fields": ["site_name", "address"],
+      "columns": {
+        "site_name": "Display Name",
+        "address": "Source Address",
+        "geocode_address": "Geocode Address",
+        "area": "Area",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "contract": "Contract"
+      },
+      "required_columns": [
+        "Display Name",
+        "Source Address"
+      ],
+      "required_row_fields": ["address"],
+      "layer_name": "★ Silvera Communities",
+      "popup_title": "Silvera Community",
+      "popup_extra_fields": [
+        {"label": "Contract", "field": "Contract", "color": "#7e22ce"},
+        {"label": "Communities", "field": "Source Site Name(s)", "skip_if_same_as": "site_name"},
+        {"label": "Review Note", "field": "Review Note", "warning": true}
+      ]
+    }
+  ],
+  "qa": {
+    "duplicate_coordinate_precision": 5,
+    "duplicate_distance_meters": 15,
+    "family_outlier_distance_km": 2.0
+  }
+}
