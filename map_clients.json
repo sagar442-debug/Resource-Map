@@ -64,6 +64,36 @@
       ]
     },
     {
+      "id": "CCSD",
+      "name": "CCSD Schools",
+      "file": "CCSD_Sites.xlsx",
+      "sheet": "Sites",
+      "enabled": true,
+      "header_mode": "first_row",
+      "marker_type": "circle",
+      "marker_color": "#2563eb",
+      "group_by_family": false,
+      "dedupe_by": "site_code",
+      "cache_key_fields": ["site_code", "address"],
+      "columns": {
+        "site_name": "Site Name",
+        "site_code": "Site Code",
+        "address": "Address",
+        "geocode_address": "Geocode Address",
+        "postal_code": "Postal Code",
+        "area": "Area",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "service_types": "Service Type"
+      },
+      "required_columns": [
+        "Site Name", "Address"
+      ],
+      "required_row_fields": ["address"],
+      "dedupe_by": "site_code",
+      "layer_name": "CCSD Schools"
+    }, 
+    {
       "id": "SILVERA",
       "name": "Silvera Communities",
       "file": "Silvera_Sites.xlsx",
@@ -103,6 +133,7 @@
         {"label": "Review Note", "field": "Review Note", "warning": true}
       ]
     }
+    
   ],
   "qa": {
     "duplicate_coordinate_precision": 5,

@@ -80,10 +80,26 @@ def _coordinate_source_html(source: str) -> str:
     label = html.escape(source or "—")
     if source == "Manual":
         return (
-            f'<span style="font-weight:700;color:#b45309;">{label}</span>'
-            ' <span style="color:#92400e;">(verified in workbook)</span>'
+            f'<span style="font-weight:700;color:#166534;">{label}</span>'
+            ' <span style="color:#166534;">(verified in workbook)</span>'
         )
     return f"<b>{label}</b>"
+
+
+def _coordinate_quality_html(site: dict[str, Any]) -> str:
+    quality = clean_text(site.get("coordinate_quality"))
+    if not quality:
+        quality = "Approximate" if site.get("approximate") else "Unknown"
+
+    safe = html.escape(quality)
+
+    if quality == "Verified":
+        return f'<span style="font-weight:700;color:#166534;">✓ {safe}</span>'
+    if quality == "Exact":
+        return f'<span style="font-weight:700;color:#166534;">{safe}</span>'
+    if quality == "Approximate":
+        return f'<span style="font-weight:700;color:#b45309;">⚠ {safe}</span>'
+    return f'<span style="font-weight:700;color:#6b7280;">{safe}</span>'
 
 
 def popup_html(site: dict[str, Any], client: dict[str, Any]) -> str:
@@ -131,12 +147,26 @@ def popup_html(site: dict[str, Any], client: dict[str, Any]) -> str:
         rows.append(("Geocoder Match", html.escape(matched)))
 
     rows.append(("Coordinate Source", _coordinate_source_html(site.get("coordinate_source", ""))))
+    rows.append(("Coordinate Quality", _coordinate_quality_html(site)))
 
     row_html = "".join(
         f'<tr><td style="padding:4px 10px 4px 0;color:#666;vertical-align:top;">{label}</td>'
         f'<td style="padding:4px 0;vertical-align:top;">{value}</td></tr>'
         for label, value in rows
     )
+
+    quality = clean_text(site.get("coordinate_quality"))
+    if not quality:
+        quality = "Approximate" if site.get("approximate") else "Unknown"
+
+    quality_warning = ""
+    if quality == "Approximate":
+        quality_warning = (
+            '<div style="margin:0 0 8px 0;padding:6px 8px;border-radius:4px;'
+            'background:#fffbeb;border:1px solid #f59e0b;color:#92400e;font-size:12px;">'
+            '⚠ Approximate geocode — verify this location before using it for operational decisions.'
+            '</div>'
+        )
 
     color = site.get("marker_color", "#333")
     if client.get("marker_type") == "star":
@@ -148,6 +178,7 @@ def popup_html(site: dict[str, Any], client: dict[str, Any]) -> str:
     <div style="font-family:Arial,sans-serif;min-width:300px;max-width:440px;">
         {heading_block}
         <div style="color:#666;margin-bottom:9px;">{html.escape(title)}</div>
+        {quality_warning}
         <table style="border-collapse:collapse;font-size:13px;width:100%;">{row_html}</table>
     </div>
     """
@@ -166,11 +197,11 @@ def code_label_html(
         <div class="{css_class}" data-family="{safe}" style="
             display:flex;align-items:center;justify-content:center;
             background:{background_color};color:white;
-            border:2px solid rgba(255,255,255,.98);border-radius:4px;
-            padding:2px 5px;min-width:28px;height:17px;box-sizing:border-box;
-            font-family:Arial,Helvetica,sans-serif;font-size:9px;font-weight:800;
-            line-height:13px;white-space:nowrap;text-align:center;
-            box-shadow:0 1px 3px rgba(0,0,0,.55);cursor:pointer;">{safe}</div>"""
+            border:1px solid rgba(255,255,255,.98);border-radius:3px;
+            padding:2px 2px;min-width:16px;height:14px;box-sizing:border-box;
+            font-family:Arial,Helvetica,sans-serif;font-size:8px;font-weight:800;
+            line-height:10px;white-space:nowrap;text-align:center;
+            box-shadow:0 1px 2px rgba(0,0,0,.55);cursor:pointer;">{safe}</div>"""
     return f"""
     <div class="{css_class}" data-property-code="{safe}" style="
         display:flex;align-items:center;justify-content:center;
@@ -185,9 +216,9 @@ def code_label_html(
 def star_marker_html(color: str, css_class: str) -> str:
     return f"""
     <div class="{css_class}" style="
-        width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-        color:{color};font-family:Arial,Helvetica,sans-serif;font-size:29px;
-        font-weight:900;line-height:28px;text-align:center;
+        width:18px;height:18px;display:flex;align-items:center;justify-content:center;
+        color:{color};font-family:Arial,Helvetica,sans-serif;font-size:20px;
+        font-weight:900;line-height:18px;text-align:center;
         text-shadow:0 0 2px rgba(255,255,255,.95),0 1px 2px rgba(0,0,0,.35);
         cursor:pointer;">★</div>"""
 
